@@ -44,13 +44,13 @@ def final_permutation(block):
 
 def key_schedule(key):
     """
-    _summary_
+    Generates the key schedule from the original 64-bit key.
 
     Parameters:
-    - key (list): _description_
+    - key (list): The original key to generate the 16 keys for the rounds. 
 
     Returns:
-    - _description_
+    - The list containing the keys for the 16 rounds. 
     """
     pc1_table = [57, 49, 41, 33, 25, 17, 9, 1,
                  58, 50, 42, 34, 26, 18, 10, 2,
@@ -80,3 +80,46 @@ def key_schedule(key):
         round_key = [left_key[i] for i in pc2_table] + [right_key[i] for i in pc2_table]
         round_keys.append(round_key)
     return round_keys
+
+def expansion_e(block):
+    """
+    Increases the diffusion in DES
+
+    Args:
+    - block (list): The right half of the initial permutation.
+
+    Returns:
+    - The expanded right half of the initial permutation.
+    """
+    expansion_table = [32, 1, 2, 3, 4, 5, 
+                       4, 5, 6, 7, 8, 9, 
+                       8, 9, 10, 11, 12, 13, 
+                       12, 13, 14, 15, 16, 17, 
+                       16, 17, 18, 19, 20, 21, 
+                       20, 21, 22, 23, 24, 25, 
+                       24, 25, 26, 27, 28, 29, 
+                       28, 29, 30, 31, 32, 1]
+    
+    expanded_block = [block[i - 1] for i in expansion_table]
+    return expanded_block
+
+def xor(block, key):
+    """
+    Does an XOR between the expanded right half and the round key.
+
+    Args:
+    - block (list): The expanded right half of the initial permutation.
+    - key (list): The key for the round.
+
+    Returns:
+    - The XOR between the expanded righ thalf and the round key. 
+    """
+    return [b1 ^ b2 for b1, b2 in zip(block, key)]
+    
+def des_feistel_network(block, round_key):
+    left_half = block[:32]
+    right_half = block[32:]
+    """ F-function """
+    expanded_right = expansion_e(right_half)
+    xor_result = xor(expanded_right, round_key)
+    """ F-function"""
