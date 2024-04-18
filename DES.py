@@ -81,11 +81,25 @@ def key_schedule(key):
         round_keys.append(round_key)
     return round_keys
 
+def reversed_key_schedule(key):
+    """
+    Generates the reversed key schedule for the 16 rounds.
+
+    Parameters:
+    - key (list): The original key to generate the 16 keys for the decryption rounds.
+
+    Returns:
+    - The list containing the reversed key order for decrypting in the 16 rounds. 
+    """
+    round_keys = key_schedule(key)
+    reversed_key_schedule = round_keys[::-1] # Reverses the list of round keys
+    return reversed_key_schedule
+
 def expansion_e(block):
     """
     Increases the diffusion in the DES algorithm.
 
-    Args:
+    Parameters:
     - block (list): The right half of the initial permutation.
 
     Returns:
@@ -107,7 +121,7 @@ def xor(block, key):
     """
     Does an XOR between the expanded right half and the round key.
 
-    Args:
+    Parameters:
     - block (list): The output of the expansion function.
     - key (list): The key for the round.
 
@@ -177,6 +191,24 @@ def s_box_substitution(block):
         value = s_box[row][column]
         substituted_block.extend([int(bit) for bit in format(value, '04b')])
     return substituted_block
+
+def permutation_p(block):
+    """
+    Does a bitwise permutation to introduce more diffusion.
+
+    Parameters:
+    - block (list): The output block from the S-boxes.
+
+    Returns:
+    - The ciphertext after being put through the permutation P function.
+    """
+    permutation_table = [16, 7, 20, 21, 29, 12, 28, 17,
+                         1, 15, 23, 26, 5, 18, 31, 10,
+                         2, 8, 24, 14, 32, 27, 3, 9,
+                         19, 13, 30, 6, 22, 11, 4, 25]
+    
+    permuted_block = [block[i - 1] for i in permutation_table]
+    return permuted_block
     
 def des_feistel_network(block, round_key):
     left_half = block[:32]
@@ -185,4 +217,76 @@ def des_feistel_network(block, round_key):
     expanded_right = expansion_e(right_half)
     xor_result = xor(expanded_right, round_key)
     substituted = s_box_substitution(xor_result)
-    """ F-function """
+    permuted = permutation_p(substituted)
+    new_right_half = xor(left_half, permuted)
+    return right_half + new_right_half
+
+def des_block_processing(block, keys):
+    """
+    Does the permutations for each round of the DES feistel network.
+
+    Parameters:
+    - block (list): The block to be proccesed on each round of encryption and decryption.
+    - keys (list): The key for the round.
+
+    Returns:
+    - The block of text that has been procccesed after each round.
+    """
+    block = initial_permutation(block)
+    for round_key in keys:
+        block = des_feistel_network(block, round_key)
+    block = block[32:] + block[:32] # Swap the halves before permutation
+    block = final_permutation(block)
+    return block
+
+def des_encrypt(plaintext, key):
+    """
+    The entire run of the DES algorithm that will be used to encrypt the plaintext block.
+
+    Parameters:
+    - plaintext (list): The plaintext to be encrypted in the DES algorithm.
+    - key (list): The key that will be used to generate the key schedule for the rounds.
+
+    Returns:
+    -  The ciphertext after going through the DES algorithm.
+    """
+    keys = key_schedule(key)
+    ciphertext = []
+    for block in plaintext:
+        encrypted_block = des_block_processing(block, keys)
+        ciphertext.extend(encrypted_block)
+    return ciphertext
+
+def des_decrypt(ciphertext, key):
+    """
+    The entire run of the DES algorithm that will be used to decrypt the ciphertext block.
+
+    Parameters:
+    - ciphertext (list): The ciphertext to be decrypted in the DES algorithm.
+    - key (list):  The key that will be used to generate the reversed key schedule for the rounds.
+
+    Returns:
+    - The decrypted text after going through the DES algorithm.
+    """
+    keys = reversed_key_schedule(key)
+    plaintext = []
+    for block in ciphertext:
+        decrypted_block = des_block_processing(block, keys)
+        plaintext.extend(decrypted_block)
+    return plaintext
+
+def main():
+    plaintext = [[0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1],
+                 [1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1]]
+    
+    key = [1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0,
+           1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1]
+    
+    ciphertext = des_encrypt(plaintext, key)
+    print("Ciphertext:", ciphertext)
+
+    decrypted_ciphertext = des_decrypt(ciphertext, key)
+    print("Decrypted ciphertext:", decrypted_ciphertext)
+
+if __name__ == "__main__":
+    main()
