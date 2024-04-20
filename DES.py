@@ -294,10 +294,23 @@ def des_decrypt(ciphertext, key):
 
 def main():
     # 64 bit Plaintext as example for an input 
-    plaintext = [0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
-                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
-                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
-                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1]
+    plaintext = [[0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
+                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  # First 64-bit block
+                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1],
+                 
+                 [0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
+                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  # Second 64-bit block
+                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
+                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+
+                 [1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  # Third 64-bit block
+                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1]]
+    
+    # Split the plaintext into 64-bit block
+    plaintext_blocks = [plaintext[i:i + 64] for i in range(0, len(plaintext), 64)]
     
     # 64 bit key as example for an input 
     key = [1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0,
@@ -305,11 +318,18 @@ def main():
            1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0,
            1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1]
     
-    ciphertext = des_encrypt(plaintext, key)
-    print("Ciphertext:", ciphertext)
+    ciphertext_blocks = []
+    for block in plaintext_blocks:
+        encrypted_blocks = des_encrypt(block, key)
+        ciphertext_blocks.extend(encrypted_blocks)
 
-    decrypted_ciphertext = des_decrypt(ciphertext, key)
-    print("Decrypted ciphertext:", decrypted_ciphertext)
+    print("Ciphertext:", ciphertext_blocks)
+
+    decrypted_blocks = []
+    for block in ciphertext_blocks:
+        decrypted_block = des_decrypt(block, key)
+        decrypted_blocks.extend(decrypted_block)
+    print("Decrypted ciphertext:", decrypted_blocks)
 
 if __name__ == "__main__":
     main()
