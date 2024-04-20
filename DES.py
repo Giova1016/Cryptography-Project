@@ -17,8 +17,8 @@ def initial_permutation(block):
                              61, 53, 45, 37, 29, 21, 13, 5,
                              63, 55, 47, 39, 31, 23, 15, 7]
     
-    premuted_pt_block = [block[i - 1] for i in initial_permute_table]
-    return premuted_pt_block
+    permuted_pt_block = [block[i - 1] for i in initial_permute_table]
+    return permuted_pt_block
 
 def final_permutation(block):
     """
@@ -70,16 +70,29 @@ def key_schedule(key):
     key_shifts = [1, 1, 2, 2, 2, 2, 2, 2, 
                   1, 2, 2, 2, 2, 2, 2, 1]
     
+    # Initialize an empty list for the round keys
     round_keys = []
-    key = [key[i - 1] for i in pc1_table]
+
+    # Permute the original key using the PC-1 lookup table.
+    key = [key[pc1_table[i] - 1] for i in range(56)]
+
+    # Split the key into two halves.
     left_key = key[:28]
     right_key = key[28:]
-    for i in range(16):
-        left_key = left_key[key_shifts[i]:] + left_key[:key_shifts[i]]
-        right_key = right_key[key_shifts[i]:] + right_key[:key_shifts[i]]
-        round_key = [left_key[i] for i in pc2_table] + [right_key[i] for i in pc2_table]
+    
+    # Generate the 16 round keys.
+    for shift in key_shifts:
+        # Rotate the two halves
+        left_key = left_key[shift:] + left_key[:shift]
+        right_key = right_key[shift:] + right_key[:shift]
+
+        # Combine the two halves.
+        combined_key = left_key + right_key
+
+        # Permute using the PC-2 lookup table.
+        round_key = [combined_key[pc2_table[i] - 29] for i in range(48)]
+        
         round_keys.append(round_key)
-    return round_keys
 
 def reversed_key_schedule(key):
     """
@@ -92,8 +105,12 @@ def reversed_key_schedule(key):
     - The list containing the reversed key order for decrypting in the 16 rounds. 
     """
     round_keys = key_schedule(key)
-    reversed_key_schedule = round_keys[::-1] # Reverses the list of round keys
-    return reversed_key_schedule
+    reversed_keys = round_keys[::-1] # Reverses the list of round keys
+
+    # Adjust the rotations for decryption
+    for i in range(1, 16, 3):
+        reversed_key_schedule[i] = reversed_keys[i][-3:] + reversed_keys[:-3]
+    return reversed_keys
 
 def expansion_e(block):
     """
@@ -276,10 +293,16 @@ def des_decrypt(ciphertext, key):
     return plaintext
 
 def main():
-    plaintext = [[0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1],
-                 [1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1]]
+    # 64 bit Plaintext as example for an input 
+    plaintext = [0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1]
     
+    # 64 bit key as example for an input 
     key = [1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0,
+           1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1,
+           1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0,
            1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1]
     
     ciphertext = des_encrypt(plaintext, key)
