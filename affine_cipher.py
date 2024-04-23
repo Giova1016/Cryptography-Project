@@ -3,8 +3,8 @@ def gcd(a, b):
     Computes the greatest common divisor (GCD) of the two numbers using the Euclidean algorithm. 
 
     Parameters:
-    - a(int): first number.
-    - b(int): second number.
+    - a: first number.
+    - b: second number.
 
     Returns:
     - GCD of a and b.
@@ -18,8 +18,8 @@ def mod_inverse(a, m):
     Computes the modular inverse of a number a mod m using the Extended Euclidean algorithm. 
 
     Parameters:
-    - a(int): the number for which the inverse is going to be found.
-    - m(int): the modulus.
+    - a: the number for which the inverse is going to be found.
+    - m: the modulus.
 
     Returns:
     - The modular inverse of a mod m if it exists, otherwise it returns None
@@ -34,9 +34,9 @@ def encrypt(plaintext, a, b):
     Encrypts a given plaintext using Affine Cipher.
 
     Parameters:
-    - plaintext(str): the input message to be encrypted.
-    - a(int): The multiplier in the encryption formula.
-    - b(int): The constant term in the encryption formula.
+    - plaintext: the input message to be encrypted.
+    - a: The multiplier in the encryption formula.
+    - b: The constant term in the encryption formula.
 
     Returns:
     - The encrypted message.
@@ -60,9 +60,9 @@ def decrypt(ciphertext, a, b):
     Decrypts a given ciphertext using Affine Cipher.
 
     Parameters:
-    - ciphertext(str): the encrypted message to be decrypted.
-    - a(int): The multiplier in the decryption formula.
-    - b(int): The constant term in the decryption formula.
+    - ciphertext: the encrypted message to be decrypted.
+    - a: The multiplier in the decryption formula.
+    - b: The constant term in the decryption formula.
 
     Returns:
     - The decrypted plaintext message.

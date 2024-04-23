@@ -3,7 +3,7 @@ def initial_permutation(block):
     Layer that performs the initial permutation on the block of plaintext.
 
     Parameters:
-    - block (list): The block of plaintext provided.
+    - block: The block of plaintext provided.
 
     Returns:
     - The block of plaintext after permutation.
@@ -17,6 +17,11 @@ def initial_permutation(block):
                              61, 53, 45, 37, 29, 21, 13, 5,
                              63, 55, 47, 39, 31, 23, 15, 7]
     
+    if isinstance(block, int):
+        # If the block is an integer, convert it to a list of bits
+        block = [int(bit) for bit in bin(block)[2:].zfill(64)] 
+    
+    # Perform the initial permutation
     permuted_pt_block = [block[i - 1] for i in initial_permute_table]
     return permuted_pt_block
 
@@ -25,7 +30,7 @@ def final_permutation(block):
     Layer that performs the final permutation oo the block of ciphertext. 
 
     Parameters:
-    - block (list): The block of ciphertext provided.
+    - block: The block of ciphertext provided.
 
     Returns:
     - The block of ciphertext after permutation.
@@ -47,7 +52,7 @@ def key_schedule(key):
     Generates the key schedule from the original 64-bit key.
 
     Parameters:
-    - key (list): The original key to generate the 16 keys for the rounds. 
+    - key: The original key to generate the 16 keys for the rounds. 
 
     Returns:
     - The list containing the keys for the 16 rounds. 
@@ -93,23 +98,29 @@ def key_schedule(key):
         round_key = [combined_key[pc2_table[i] - 29] for i in range(48)]
         
         round_keys.append(round_key)
+    return round_keys
 
 def reversed_key_schedule(key):
     """
     Generates the reversed key schedule for the 16 rounds.
 
     Parameters:
-    - key (list): The original key to generate the 16 keys for the decryption rounds.
+    - key: The original key to generate the 16 keys for the decryption rounds.
 
     Returns:
     - The list containing the reversed key order for decrypting in the 16 rounds. 
     """
-    round_keys = key_schedule(key)
-    reversed_keys = round_keys[::-1] # Reverses the list of round keys
+    reversed_keys = key_schedule(key)
+    reversed_keys = reversed_keys[::-1] # Reverses the list of round keys
 
     # Adjust the rotations for decryption
     for i in range(1, 16, 3):
-        reversed_key_schedule[i] = reversed_keys[i][-3:] + reversed_keys[:-3]
+        left_half = reversed_keys[i][:28]
+        right_half = reversed_keys[i][28:]
+        shifted_left_half = left_half[2:] + left_half[:2]
+        shifted_right_half = right_half[2:] + right_half[:2]
+        reversed_keys[i] = shifted_left_half + shifted_right_half
+        
     return reversed_keys
 
 def expansion_e(block):
@@ -117,7 +128,7 @@ def expansion_e(block):
     Increases the diffusion in the DES algorithm.
 
     Parameters:
-    - block (list): The right half of the initial permutation.
+    - block: The right half of the initial permutation.
 
     Returns:
     - The expanded right half of the initial permutation.
@@ -139,12 +150,30 @@ def xor(block, key):
     Does an XOR between the expanded right half and the round key.
 
     Parameters:
-    - block (list): The output of the expansion function.
-    - key (list): The key for the round.
+    - block: The output of the expansion function.
+    - key: The key for the round.
 
     Returns:
     - The XOR between the output of the expansion function and the round key. 
     """
+    # Convert block to a list is it's an integer
+    if isinstance(block, int):
+        block = [int(bit) for bit in bin(block)[2:].zfill(48)]
+    elif len(block) != 48:
+        block = [int(bit) for bit in ''.join(map(str, block)).zfill(48)]
+
+    # Handles the case when the key is a nested list of 48-bit keys
+    if isinstance(key[0], list) and len(key[0]) == 48:
+        key = key[0]  # Use the first 48-bit key from the list
+
+    # If the key is a list, ensure its length is 48 
+    if isinstance(key, list):
+        if len(key) != 48:
+            key = [int(bit) for bit in ''.join(map(str, key)).zfill(48)]
+    # If the key is an integer, convert to a list of length 48
+    else:
+        key = [int(bit) for bit in bin(key)[2:].zfill(48)]
+
     return [b1 ^ b2 for b1, b2 in zip(block, key)]
 
 def s_box_substitution(block):
@@ -153,7 +182,7 @@ def s_box_substitution(block):
     They are a lookup table that maps a 6-bit input to a 4-bit output.
 
     Parameters:
-        block (list): The output of the expansion function E.
+        block: The output of the expansion function E.
 
     Returns:
     - The ciphertext after being put through the nonlinear S-boxes.  
@@ -214,7 +243,7 @@ def permutation_p(block):
     Does a bitwise permutation to introduce more diffusion.
 
     Parameters:
-    - block (list): The output block from the S-boxes.
+    - block: The output block from the S-boxes.
 
     Returns:
     - The ciphertext after being put through the permutation P function.
@@ -238,40 +267,44 @@ def des_feistel_network(block, round_key):
     new_right_half = xor(left_half, permuted)
     return right_half + new_right_half
 
-def des_block_processing(block, keys):
+def des_block_processing(blocks, keys):
     """
     Does the permutations for each round of the DES feistel network.
 
     Parameters:
-    - block (list): The block to be proccesed on each round of encryption and decryption.
-    - keys (list): The key for the round.
+    - block: The block to be proccesed on each round of encryption and decryption.
+    - keys: The key for the round.
 
     Returns:
     - The block of text that has been procccesed after each round.
     """
-    block = initial_permutation(block)
-    for round_key in keys:
-        block = des_feistel_network(block, round_key)
-    block = block[32:] + block[:32] # Swap the halves before permutation
-    block = final_permutation(block)
-    return block
+    proccesed_blocks = []
+    for block in blocks:
+        block = initial_permutation(block)
+        for round_key in keys:
+            block = des_feistel_network(block, round_key)
+        block = block[32:] + block[:32] # Swap the halves before permutation
+        block = final_permutation(block)
+        proccesed_blocks.append(block)
+    return proccesed_blocks
 
 def des_encrypt(plaintext, key):
     """
     The entire run of the DES algorithm that will be used to encrypt the plaintext block.
 
     Parameters:
-    - plaintext (list): The plaintext to be encrypted in the DES algorithm.
-    - key (list): The key that will be used to generate the key schedule for the rounds.
+    - plaintext: The plaintext to be encrypted in the DES algorithm.
+    - key: The key that will be used to generate the key schedule for the rounds.
 
     Returns:
     -  The ciphertext after going through the DES algorithm.
     """
     keys = key_schedule(key)
+    plaintext_blocks = [plaintext[i:i + 64] for i in range(0, len(plaintext), 64)]
     ciphertext = []
-    for block in plaintext:
-        encrypted_block = des_block_processing(block, keys)
-        ciphertext.extend(encrypted_block)
+    encrypted_blocks = des_block_processing(plaintext_blocks, keys)
+    for block in encrypted_blocks:
+        ciphertext.extend(block)
     return ciphertext
 
 def des_decrypt(ciphertext, key):
@@ -279,57 +312,52 @@ def des_decrypt(ciphertext, key):
     The entire run of the DES algorithm that will be used to decrypt the ciphertext block.
 
     Parameters:
-    - ciphertext (list): The ciphertext to be decrypted in the DES algorithm.
-    - key (list):  The key that will be used to generate the reversed key schedule for the rounds.
+    - ciphertext: The ciphertext to be decrypted in the DES algorithm.
+    - key:  The key that will be used to generate the reversed key schedule for the rounds.
 
     Returns:
     - The decrypted text after going through the DES algorithm.
     """
     keys = reversed_key_schedule(key)
+    ciphertext_blocks = [ciphertext[i:i + 64] for i in range(0, len(ciphertext), 64)]
     plaintext = []
-    for block in ciphertext:
-        decrypted_block = des_block_processing(block, keys)
-        plaintext.extend(decrypted_block)
+    decrypted_blocks = des_block_processing(ciphertext_blocks, keys)
+    for block in decrypted_blocks:
+        plaintext.extend(block)
     return plaintext
 
 def main():
-    # 64 bit Plaintext as example for an input 
-    plaintext = [[0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
-                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  # First 64-bit block
-                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
-                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1],
+    # 64 bit Plaintext as example for an input.
+    plaintext = [0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  # First 64-bit block
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,
                  
-                 [0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
-                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  # Second 64-bit block
-                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
-                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+                 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  # Second 64-bit block
+                 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,
 
-                 [1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
-                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  # Third 64-bit block
-                  1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
-                  0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1]]
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1,  # Third 64-bit block
+                 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,  
+                 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1]
     
-    # Split the plaintext into 64-bit block
-    plaintext_blocks = [plaintext[i:i + 64] for i in range(0, len(plaintext), 64)]
+    # Split the plaintext into 64-bit blocks.
     
-    # 64 bit key as example for an input 
+    # 64 bit key as example for an input. 
     key = [1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0,
            1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1,
            1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0,
            1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1]
     
-    ciphertext_blocks = []
-    for block in plaintext_blocks:
-        encrypted_blocks = des_encrypt(block, key)
-        ciphertext_blocks.extend(encrypted_blocks)
-
-    print("Ciphertext:", ciphertext_blocks)
-
-    decrypted_blocks = []
-    for block in ciphertext_blocks:
-        decrypted_block = des_decrypt(block, key)
-        decrypted_blocks.extend(decrypted_block)
-    print("Decrypted ciphertext:", decrypted_blocks)
+    # Encrypt the plaintext.
+    encrypted_ciphertext = des_encrypt(plaintext, key)
+    print("Ciphertext:", encrypted_ciphertext)
+    
+    # Decrypt the ciphertext.
+    decrypted_ciphertext = des_decrypt(encrypted_ciphertext, key)
+    print("Decrypted ciphertext:", decrypted_ciphertext)
 
 if __name__ == "__main__":
     main()

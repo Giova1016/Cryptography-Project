@@ -173,11 +173,11 @@ def main():
     # Display the result
     print("Result of the first round of AES in hexadecimal:")
     for i in range(4):
-        print(" ".join(format(result[i * 4 + j], '02x') for j in range(4)))
+        print(' '.join(format(result[i * 4 + j], '02x') for j in range(4)))
     
     print("Result of the first round of AES converted to binary:")
     for i in range(4):
-        print(" ".join(format(result[i * 4 + j], '08b') for j in range(4)))
+        print(' '.join(format(result[i * 4 + j], '08b') for j in range(4)))
         
     print("Result of the first round of AES converted to binary with spacing:")
     for i in range(4):

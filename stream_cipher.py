@@ -5,7 +5,7 @@ def generate_key(length):
     Generates a random key of 1's and 0's (binary) of the same length as the plaintext provided. 
 
     Parameters:
-    - length(int): The length of the key to be generated.
+    - length: The length of the key to be generated.
 
     Returns:
     - A string of random 1's and 0's representing the generated key.
@@ -18,7 +18,7 @@ def text_to_binary(text):
     Converts the plaintext message to binary.
 
     Parameters:
-    - text (str): The plaintext message to be converted.
+    - text: The plaintext message to be converted.
 
     Returns:
     - The binary conversion of the plaintext message. 
@@ -31,8 +31,8 @@ def encrypt_message(message, key):
     Encrypts a given plaintext message using Stream Cipher.
 
     Parameters:
-    - message(str): The input message to be encrypted.
-    - key(str): The key used to encrypt the message.
+    - message: The input message to be encrypted.
+    - key: The key used to encrypt the message.
 
     Returns:
     - The encrypted ciphertext message.
@@ -49,8 +49,8 @@ def decrypt_message(encrypted_message, key):
     Decrypts a given ciphertext using Stream Cipher.
 
     Parameters:
-    - encrypted_message(str): The encrypted message to be decrypted.
-    - key(str): The key used to decrypt the message.
+    - encrypted_message: The encrypted message to be decrypted.
+    - key: The key used to decrypt the message.
 
     Returns:
     - The decrypted plaintext message.
