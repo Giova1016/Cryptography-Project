@@ -95,7 +95,7 @@ def key_schedule(key):
         combined_key = left_key + right_key
 
         # Permute using the PC-2 lookup table.
-        round_key = [combined_key[pc2_table[i] - 29] for i in range(48)]
+        round_key = [combined_key[pc2_table[i] - 1] for i in range(48)]
         
         round_keys.append(round_key)
     return round_keys

@@ -8,6 +8,7 @@ def byte_substitution(state):
     Returns:
     - Result after byte substitution.
     """
+    global s_box
     s_box = [0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
              0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
              0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
@@ -103,7 +104,40 @@ def gf_multiply(a, b):
         b >>= 1
     return result
 
-def aes_first_round(plaintext, round_key):
+def key_schedule(key):
+    rc = [0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36]
+    key_len = len(key)
+    round_keys = []
+    rounds = 0
+
+    # Checks the key length and assign the number of rounds accordingly.
+    if key_len == 16:
+        rounds = 10
+    elif key_len == 24:
+        rounds = 12
+    elif key_len == 32:
+        rounds = 14
+    else:
+        raise ValueError("Invalid key length. Key must be 128, 192 or 256-bit.")
+    
+    # Initialize the round keys with the master key.
+    round_keys.append(key)
+
+    # Generate the remaining round keys.
+    for i in range(rounds):
+        prev_key = round_keys[-1]
+        new_key = [0] * key_len
+
+        # Perform the key schedule algorithm
+        for j in range(key_len):
+            if j == 0:
+                new_key[j] = (s_box[prev_key[(j + 1) % key_len]] ^ prev_key[j] ^ rc[i])
+            elif (key_len > 24) and (j % key_len == 16):
+                new_key[j] = (s_box[new_key[j - 1]] ^ prev_key[j])
+            else:
+                new_key[j] = (new_key[j - key_len] ^ prev_key[j])
+
+def aes_algorithm(plaintext, round_key):
     """
     Performs the first round of AES.
     
@@ -168,7 +202,7 @@ def main():
     round_key = [0xff] * 16 # 128-bit key of all 1's in hex
     
     # Perform the first round of AES
-    result = aes_first_round(plaintext, round_key)
+    result = aes_algorithm(plaintext, round_key)
     
     # Display the result
     print("Result of the first round of AES in hexadecimal:")
