@@ -111,7 +111,7 @@ def reversed_key_schedule(key):
     - The list containing the reversed key order for decrypting in the 16 rounds. 
     """
     reversed_keys = key_schedule(key)
-    reversed_keys = reversed_keys[::-1] # Reverses the list of round keys
+    reversed_keys.reverse() # Reverses the list of round keys
 
     # Adjust the rotations for decryption
     for i in range(1, 16, 3):
