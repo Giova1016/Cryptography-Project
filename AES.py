@@ -268,7 +268,7 @@ def aes_encryption(plaintext, round_key):
     round_keys = key_schedule(round_key)
 
     # Initial key addition
-    state = key_addition(plaintext, round_keys)
+    state = key_addition(plaintext, round_keys[0])
     
     # Perform the rounds
     for i in range(1, rounds):
@@ -323,7 +323,7 @@ def aes_decryption(ciphertext, key):
     round_keys = decryption_key_schedule(key)
 
     # Initial key addition
-    state = key_addition(ciphertext, round_keys)
+    state = key_addition(ciphertext, round_keys[0])
 
     # Perform the rounds
     for i in range(rounds - 1, 0, -1):
@@ -343,7 +343,7 @@ def aes_decryption(ciphertext, key):
     # Final round(without inverse mix columns)
     state = inv_shift_rows(state)
     state = inv_byte_substitution(state)
-    state = key_addition(state, round_keys[0])
+    state = key_addition(state, round_keys[-1])
 
     return state
          
@@ -374,9 +374,9 @@ def main():
     # Display the decrypted message
     print("\nDecrypted message in hexadecimal:")
     for i in range(4):
-        print(''.join(format(decrypted_ciphertext[i * 4 * j], '02x') for j in range(4)))
+        print(' '.join(format(decrypted_ciphertext[i * 4 + j], '02x') for j in range(4)))
 
-    print("\Decrypted message converted to binary:")
+    print("\nDecrypted message converted to binary:")
     for i in range(4):
         print(' '.join(format(decrypted_ciphertext[i * 4 + j], '08b') for j in range(4)))    
 
