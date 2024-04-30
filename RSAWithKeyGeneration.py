@@ -1,5 +1,6 @@
 import random
 from affine_cipher import gcd
+from SquareAndMultipy import square_and_multiply
 from PrimalityTests import miller_rabin_primality_test
 
 def extended_gcd(a, b):
@@ -100,7 +101,7 @@ def rsa_encrypt(plaintext, public_key):
     - The encrypted ciphertext.
     """
     n, e = public_key
-    ciphertext = pow(plaintext, e, n)
+    ciphertext = square_and_multiply(plaintext, e, n)
     return ciphertext
 
 def rsa_decrypt(ciphertext, private_key):
@@ -115,7 +116,7 @@ def rsa_decrypt(ciphertext, private_key):
     - The decrypted message.
     """
     n, d = private_key
-    plaintext = pow(ciphertext, d, n)
+    plaintext = square_and_multiply(ciphertext, d, n)
     return plaintext
 
 def main():
