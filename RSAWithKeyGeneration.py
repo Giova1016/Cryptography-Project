@@ -1,6 +1,6 @@
 import random
 from affine_cipher import gcd
-from PrimalityTests import miller_rabin_primality_test 
+from PrimalityTests import miller_rabin_primality_test
 
 def extended_gcd(a, b):
     """
@@ -81,7 +81,7 @@ def generate_prime(bit_length):
     - bit_length: the length of the exponent for the prime numbers to be generated.
 
     Returns:
-    - The number of the specified length generated after being checked if it is a prime.
+    - The number of the specified length generated after being checked if it is a prime using the Miller-Rabin Primality test.
     """
     while True:
         p = random.randrange(2 ** (bit_length - 1), 2 ** bit_length)
@@ -122,8 +122,10 @@ def main():
     # Generate the key pair
     key_size = 1024
     public_key, private_key = generate_key_pair(key_size)
-    print(f"Public key:{public_key}")
-    print(f"Private key:{private_key}")
+    
+    # Uncomment to see the Public and Private key pair generated
+    # print(f"Public key:{public_key}")
+    # print(f"Private key:{private_key}")
 
     # Encrypt the message using RSA encryption
     plaintext = 7
