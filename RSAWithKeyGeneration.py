@@ -1,19 +1,6 @@
 import random
-
-def gcd(a, b):
-    """
-    Computes the greatest common divisor (GCD) of the two numbers using the Euclidean algorithm. 
-
-    Parameters:
-    - a: first number.
-    - b: second number.
-
-    Returns:
-    - GCD of a and b.
-    """
-    while b != 0:
-        a, b = b, a % b # Update a and b using the Euclidean algorithm 
-    return a
+from affine_cipher import gcd
+from PrimalityTests import miller_rabin_primality_test 
 
 def extended_gcd(a, b):
     """
@@ -98,41 +85,9 @@ def generate_prime(bit_length):
     """
     while True:
         p = random.randrange(2 ** (bit_length - 1), 2 ** bit_length)
-        if is_prime(p):
+        if miller_rabin_primality_test(p):
             return p
         
-def is_prime(n, k=10):
-    """
-    Tests if a number is prime using the Miller-Rabin primality test.
-
-    Parameters:
-    - n: the number being tested.
-    - k: the limit of times the number will be tested. Defaults to 10.
-
-    Returns:
-    - Returns if the number generated is a prime (True) or if it is not a prime (False) after being tested.
-    """
-    if n < 2: 
-        return False
-    for p in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]:
-        if n % p == 0: 
-            return n == p
-    s, d = 0, n - 1
-    while d % 2 == 0:
-        s, d = s + 1, d >> 1
-    for i in range(k):
-        x = random.randrange(2, n - 1)
-        x = pow(x, d, n)
-        if x == 1 or x == n - 1: 
-            continue
-        for r in range(1, s):
-            x = pow(x, 2, n)
-            if x == n - 1: 
-                break
-        else: 
-            return False
-    return True
-
 def rsa_encrypt(plaintext, public_key):
     """
     Encrypts the plaintext message with the public key generated using the RSA Cyptosystem.

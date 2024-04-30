@@ -1,4 +1,5 @@
 import random
+from SquareAndMultipy import square_and_multiply
 
 def fermat_primality_test(p, k=10):
     """
@@ -43,7 +44,7 @@ def miller_rabin_primality_test(prime_number, k=10):
         s, d = s + 1, d >> 1
     for _ in range(k):
         x = random.randrange(2, prime_number - 1)
-        x = pow(x, d, prime_number)
+        x = square_and_multiply(x, d, prime_number)
         if x == 1 or x == prime_number - 1: 
             continue
         for _ in range(1, s):
