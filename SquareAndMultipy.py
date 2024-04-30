@@ -1,14 +1,14 @@
 def square_and_multiply(x, H, n):
     """
-    Computes the modula exponentiation x^H mod n.
+    Computes the modular exponentiation x^H mod n.
 
     Parameters:
     - x: the base.
     - H: the exponent.
-    - n: the moculus.
+    - n: the modulus.
 
     Returns:
-    - The result of the fromula x^H mod n.
+    - The result of the modular exponentiation x^H mod n.
     """
     r = 1
     for bit in reversed(bin(H)[2:]):
