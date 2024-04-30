@@ -19,7 +19,7 @@ def fermat_primality_test(p, k=10):
 
     for _ in range(k):
         a = random.randrange(2, p)
-        if pow(a, p - 1, p) != 1:
+        if square_and_multiply(a, p - 1, p) != 1:
             return False
     return True
 
@@ -48,7 +48,7 @@ def miller_rabin_primality_test(prime_number, k=10):
         if x == 1 or x == prime_number - 1: 
             continue
         for _ in range(1, s):
-            x = pow(x, 2, prime_number)
+            x = square_and_multiply(x, 2, prime_number)
             if x == prime_number - 1: 
                 break
         else: 

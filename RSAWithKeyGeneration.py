@@ -1,6 +1,7 @@
 import random
 from affine_cipher import gcd
-from PrimalityTests import miller_rabin_primality_test 
+from SquareAndMultipy import square_and_multiply
+from PrimalityTests import miller_rabin_primality_test
 
 def extended_gcd(a, b):
     """
@@ -81,7 +82,7 @@ def generate_prime(bit_length):
     - bit_length: the length of the exponent for the prime numbers to be generated.
 
     Returns:
-    - The number of the specified length generated after being checked if it is a prime.
+    - The number of the specified length generated after being checked if it is a prime using the Miller-Rabin Primality test.
     """
     while True:
         p = random.randrange(2 ** (bit_length - 1), 2 ** bit_length)
@@ -100,7 +101,7 @@ def rsa_encrypt(plaintext, public_key):
     - The encrypted ciphertext.
     """
     n, e = public_key
-    ciphertext = pow(plaintext, e, n)
+    ciphertext = square_and_multiply(plaintext, e, n)
     return ciphertext
 
 def rsa_decrypt(ciphertext, private_key):
@@ -115,15 +116,17 @@ def rsa_decrypt(ciphertext, private_key):
     - The decrypted message.
     """
     n, d = private_key
-    plaintext = pow(ciphertext, d, n)
+    plaintext = square_and_multiply(ciphertext, d, n)
     return plaintext
 
 def main():
     # Generate the key pair
     key_size = 1024
     public_key, private_key = generate_key_pair(key_size)
-    print(f"Public key:{public_key}")
-    print(f"Private key:{private_key}")
+    
+    # Uncomment to see the Public and Private key pair generated
+    # print(f"Public key:{public_key}")
+    # print(f"Private key:{private_key}")
 
     # Encrypt the message using RSA encryption
     plaintext = 7
