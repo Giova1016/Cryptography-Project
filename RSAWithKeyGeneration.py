@@ -124,12 +124,11 @@ def main():
     key_size = 1024
     public_key, private_key = generate_key_pair(key_size)
     
-    # Uncomment to see the Public and Private key pair generated
-    # print(f"Public key:{public_key}")
-    # print(f"Private key:{private_key}")
+    print(f"Public key:{public_key}\n")
+    print(f"Private key:{private_key}\n")
 
     # Encrypt the message using RSA encryption
-    plaintext = 7
+    plaintext = 777
     ciphertext = rsa_encrypt(plaintext, public_key)
     print(f"Plaintext: {plaintext}")
     print(f"Ciphertext: {ciphertext}")

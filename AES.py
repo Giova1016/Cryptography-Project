@@ -360,27 +360,27 @@ def main():
     # Perform the first round of AES
     ciphertext = aes_encryption(plaintext, master_key)
     
-    # Display the encrypted message
-    print("Encrypted message in hexadecimal:")
-    for i in range(4):
-        print(' '.join(format(ciphertext[i * 4 + j], '02x') for j in range(4)))
-
-    # Uncomment to see the binary version
-    # print("\nEncrypted message converted to binary:")
+    # Uncomment to see the hexadecimal version
+    # # Display the encrypted message
+    # print("Encrypted message in hexadecimal:")
     # for i in range(4):
-    #     print(' '.join(format(ciphertext[i * 4 + j], '08b') for j in range(4)))
+    #     print(' '.join(format(ciphertext[i * 4 + j], '02x') for j in range(4)))
+
+    print("\nEncrypted message converted to binary:")
+    for i in range(4):
+        print(' '.join(format(ciphertext[i * 4 + j], '08b') for j in range(4)))
     
     decrypted_ciphertext = aes_decryption(ciphertext, master_key)
 
+    # Uncomment to see the hexadecimal version
     # Display the decrypted message
-    print("\nDecrypted message in hexadecimal:")
-    for i in range(4):
-        print(' '.join(format(decrypted_ciphertext[i * 4 + j], '02x') for j in range(4)))
-        
-    # Uncomment to see the binary version
-    # print("\nDecrypted message converted to binary:")
+    # print("\nDecrypted message in hexadecimal:")
     # for i in range(4):
-    #     print(' '.join(format(decrypted_ciphertext[i * 4 + j], '08b') for j in range(4)))    
+    #     print(' '.join(format(decrypted_ciphertext[i * 4 + j], '02x') for j in range(4)))
+        
+    print("\nDecrypted message converted to binary:")
+    for i in range(4):
+        print(' '.join(format(decrypted_ciphertext[i * 4 + j], '08b') for j in range(4)))    
 
 if __name__=="__main__":
     main()

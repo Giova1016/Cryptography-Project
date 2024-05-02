@@ -353,10 +353,12 @@ def main():
     
     # Encrypt the plaintext.
     encrypted_ciphertext = des_encrypt(plaintext, key)
-    print("Ciphertext:", encrypted_ciphertext)
     
     # Decrypt the ciphertext.
     decrypted_ciphertext = des_decrypt(encrypted_ciphertext, key)
+    encrypted_ciphertext = int(''.join(map(str, encrypted_ciphertext)))
+    print("Ciphertext:", encrypted_ciphertext)
+    decrypted_ciphertext = int(''.join(map(str, decrypted_ciphertext)))
     print("Decrypted ciphertext:", decrypted_ciphertext)
 
 if __name__ == "__main__":
