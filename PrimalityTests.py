@@ -62,24 +62,21 @@ def main():
     carmichael_numbers = [561, 1105, 1729, 2465, 2821, 6601]
 
     for p in primes:
-        try:
-            assert miller_rabin_primality_test(p) and fermat_primality_test(p)
+        if miller_rabin_primality_test(p) and fermat_primality_test(p):
             print(f"{p} is prime")
-        except AssertionError:
+        else:
             print(f"{p} should be prime, but the tests failed")
 
     for p in composites:
-        try:
-            assert not miller_rabin_primality_test(p) and not fermat_primality_test(p)
+        if not miller_rabin_primality_test(p) and not fermat_primality_test(p):
             print(f"{p} is composite")
-        except AssertionError:
+        else:
             print(f"{p} should be composite, but the tests failed")
 
     for p in carmichael_numbers:
-        try:
-            assert not miller_rabin_primality_test(p) or fermat_primality_test(p)
+        if not miller_rabin_primality_test(p) and fermat_primality_test(p):
             print(f"{p} is a Carmichael number, Fermat test fails")
-        except AssertionError:
+        else:
             print(f"{p} should be a Carmichael number, but the tests failed")
 
     print("All tests completed!")
