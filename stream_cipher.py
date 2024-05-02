@@ -5,10 +5,10 @@ def generate_key(length):
     Generates a random key of 1's and 0's (binary) of the same length as the plaintext provided. 
 
     Parameters:
-    - length: The length of the key to be generated.
+    - length: the length of the key to be generated
 
     Returns:
-    - A string of random 1's and 0's representing the generated key.
+    - A string of random 1's and 0's representing the generated key
     """
     key = ''.join(random.choice('01') for _ in range(length)) # Selects 1 or 0 at random to generate the key that is the same length as the plaintext provided.
     return key
@@ -18,10 +18,10 @@ def text_to_binary(text):
     Converts the plaintext message to binary.
 
     Parameters:
-    - text: The plaintext message to be converted.
+    - text: the plaintext message to be converted
 
     Returns:
-    - The binary conversion of the plaintext message. 
+    - The binary conversion of the plaintext message
     """
     binary_message = ''.join(format(ord(char), '08b') for char in text)
     return binary_message
@@ -31,11 +31,11 @@ def encrypt_message(message, key):
     Encrypts a given plaintext message using Stream Cipher.
 
     Parameters:
-    - message: The input message to be encrypted.
-    - key: The key used to encrypt the message.
+    - message: the input message to be encrypted
+    - key: the key used to encrypt the message
 
     Returns:
-    - The encrypted ciphertext message.
+    - The encrypted ciphertext message
     """
     encrypted_message = '' # Initialize an empty string
     for i in range(len(message)):
@@ -49,11 +49,11 @@ def decrypt_message(encrypted_message, key):
     Decrypts a given ciphertext using Stream Cipher.
 
     Parameters:
-    - encrypted_message: The encrypted message to be decrypted.
-    - key: The key used to decrypt the message.
+    - encrypted_message: the encrypted message to be decrypted
+    - key: the key used to decrypt the message
 
     Returns:
-    - The decrypted plaintext message.
+    - The decrypted plaintext message
     """
     decrypted_message = '' # Initialize an empty string
     for i in range(len(encrypted_message)):

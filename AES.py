@@ -20,10 +20,10 @@ def byte_substitution(state):
     Layer that performs byte substitution with the S-box lookup table.
     
     Parameter:
-    - state: Current state of the data.
+    - state: current state of the data
     
     Returns:
-    - Result after byte substitution.
+    - Result after byte substitution
     """    
     return [s_box[byte] for byte in state]
 
@@ -32,10 +32,10 @@ def shift_rows(state):
     The first layer of diffusion that performs row shifting.
     
     Parameters:
-    - state: Curent state of the data.
+    - state: curent state of the data
     
     Returns:
-    - The shifted rows of the data.
+    - The shifted rows of the data
     """
     return[state[0], state[4], state[8], state[12],
            state[5], state[9], state[13], state[1],
@@ -47,10 +47,10 @@ def mix_columns(state):
     The second layer of diffusion that performs column layer mixing using matrix multiplication.
     
     Parameters:
-    - state: Current state of the data.
+    - state: current state of the data
     
     Returns:
-    - New state after mixing the columns.
+    - New state after mixing the columns
     """
     matrix = [0x02, 0x03, 0x01, 0x01,
               0x01, 0x02, 0x03, 0x01, 
@@ -72,11 +72,11 @@ def key_addition(state, round_key):
     Layer that performs key addition.
     
     Parameters:
-    - state: Current state of the data.
-    - round_key: Key for the current round.
+    - state: current state of the data
+    - round_key: key for the current round
     
     Returns:
-    - Result after key addition.
+    - Result after key addition
     """
     if not round_key:  # Checks if round_key is empty
         return state
@@ -87,8 +87,8 @@ def gf_multiply(a, b):
     Multiplies two numbers in the Galois Field GF(2^8).
     
     Parameters:
-    - a: first number.
-    - b: second number.
+    - a: first number
+    - b: second number
     
     Returns:
     - Result after multiplying two numbers in the Galois Field
@@ -108,13 +108,13 @@ def key_schedule(key):
     Generates the round keys from the master key for encryption.
 
     Parameters:
-    - key: the master key (128-bit, 192-bit, or 256-bit key).
+    - key: the master key (128-bit, 192-bit, or 256-bit key)
 
     Raises:
-    - ValueError: Raises the exception if the value is not the correct length.
+    - ValueError: Raises the exception if the value is not the correct length
 
     Returns:
-    - The list of round keys for encryption.
+    - The list of round keys for encryption
     """
     rcon = [0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36]
     key_len = len(key)
@@ -157,10 +157,10 @@ def inv_mix_columns(state):
     The second layer of diffusion that performs column layer mixing using matrix multiplication with the inverted matrix.
     
     Parameters:
-    - state: Current state of the data.
+    - state: current state of the data
     
     Returns:
-    - New state after mixing the columns with the inverted matrix.
+    - New state after mixing the columns with the inverted matrix
     """
     inv_matrix = [0x0e, 0x0b, 0x0d, 0x09,
                   0x09, 0x0e, 0x0b, 0x0d,
@@ -182,10 +182,10 @@ def inv_shift_rows(state):
     The first layer of diffusion that performs inverse row shifting for decryption.
     
     Parameters:
-    - state: Curent state of the data.
+    - state: curent state of the data
     
     Returns:
-    - The inverted shifted rows of the data.
+    - The inverted shifted rows of the data
     """
     return [state[0], state[13], state[10], state[7],
             state[4], state[1], state[14], state[11],
@@ -197,10 +197,10 @@ def inv_byte_substitution(state):
     Layer that performs the inverted byte substitution with the S-box lookup table for decryption.
     
     Parameter:
-    - state: Current state of the data.
+    - state: current state of the data
     
     Returns:
-    - Result after inverted byte substitution.
+    - Result after inverted byte substitution
     """
     inv_s_box = [0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
                  0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
@@ -226,10 +226,10 @@ def decryption_key_schedule(key):
     Generates the round keys for decryption by inverting the list containing the encryption round keys.
 
     Parameters:
-    - key: the master key (128-bit, 192-bit, or 256-bit key).
+    - key: the master key (128-bit, 192-bit, or 256-bit key)
 
     Returns:
-    - The list of round kyes for decryption.
+    - The list of round kyes for decryption
     """
     encryption_round_keys = key_schedule(key)
     decryption_round_keys = encryption_round_keys[::-1] # Reverse the list of round keys
@@ -242,11 +242,11 @@ def aes_encryption(plaintext, round_key):
     Performs the AES algorithm to encrypt the plaintext using the provided key.
     
     Parameters:
-    - plaintext: the input message to be encrypted.
-    - key: the key to be used when encrypting the message.
+    - plaintext: the input message to be encrypted
+    - key: the key to be used when encrypting the message
 
     Raises:
-    - ValueError: Raises the exception if the value is not the correct length.
+    - ValueError: Raises the exception if the value is not the correct length
     
     Returns:
     - The encrypted ciphertext.
@@ -297,14 +297,14 @@ def aes_decryption(ciphertext, key):
     Performs the AES algorithm to decrypt the ciphertext using the provided key.
 
     Parameters:
-    - ciphertext: the inputed ciphertext to be decrypted.
-    - key: the key to be used when decrypting the message.
+    - ciphertext: the inputed ciphertext to be decrypted
+    - key: the key to be used when decrypting the message
 
     Raises:
-    - ValueError: Raises the exception if the value is not the correct length.
+    - ValueError: Raises the exception if the value is not the correct length
 
     Returns:
-    - The decrypted message.
+    - The decrypted message
     """
     key_len = len(key)
     rounds = 0

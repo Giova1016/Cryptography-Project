@@ -3,10 +3,10 @@ def initial_permutation(block):
     Layer that performs the initial permutation on the block of plaintext.
 
     Parameters:
-    - block: The block of plaintext provided.
+    - block: the block of plaintext provided
 
     Returns:
-    - The block of plaintext after permutation.
+    - The block of plaintext after permutation
     """
     initial_permute_table = [58, 50, 42, 34, 26, 18, 10, 2,
                              60, 52, 44, 36, 28, 20, 12, 4,
@@ -30,10 +30,10 @@ def final_permutation(block):
     Layer that performs the final permutation oo the block of ciphertext. 
 
     Parameters:
-    - block: The block of ciphertext provided.
+    - block: the block of ciphertext provided
 
     Returns:
-    - The block of ciphertext after permutation.
+    - The block of ciphertext after permutation
     """
     final_permute_table = [40, 8, 48, 16, 56, 24, 64, 32,
                            39, 7, 47, 15, 55, 23, 63, 31,
@@ -52,10 +52,10 @@ def key_schedule(key):
     Generates the key schedule from the original 64-bit key.
 
     Parameters:
-    - key: The original key to generate the 16 keys for the rounds. 
+    - key: the original key to generate the 16 keys for the rounds
 
     Returns:
-    - The list containing the keys for the 16 rounds. 
+    - The list containing the keys for the 16 rounds
     """
     pc1_table = [57, 49, 41, 33, 25, 17, 9, 1,
                  58, 50, 42, 34, 26, 18, 10, 2,
@@ -105,10 +105,10 @@ def reversed_key_schedule(key):
     Generates the reversed key schedule for the 16 rounds.
 
     Parameters:
-    - key: The original key to generate the 16 keys for the decryption rounds.
+    - key: the original key to generate the 16 keys for the decryption rounds
 
     Returns:
-    - The list containing the reversed key order for decrypting in the 16 rounds. 
+    - The list containing the reversed key order for decrypting in the 16 rounds
     """
     reversed_keys = key_schedule(key)
     reversed_keys.reverse() # Reverses the list of round keys
@@ -128,10 +128,10 @@ def expansion_e(block):
     Increases the diffusion in the DES algorithm.
 
     Parameters:
-    - block: The right half of the initial permutation.
+    - block: the right half of the initial permutation
 
     Returns:
-    - The expanded right half of the initial permutation.
+    - The expanded right half of the initial permutation
     """
     expansion_table = [32, 1, 2, 3, 4, 5, 
                        4, 5, 6, 7, 8, 9, 
@@ -150,11 +150,11 @@ def xor(block, key):
     Does an XOR between the expanded right half and the round key.
 
     Parameters:
-    - block: The output of the expansion function.
-    - key: The key for the round.
+    - block: the output of the expansion function
+    - key: the key for the round
 
     Returns:
-    - The XOR between the output of the expansion function and the round key. 
+    - The XOR between the output of the expansion function and the round key
     """
     # Convert block to a list is it's an integer
     if isinstance(block, int):
@@ -182,10 +182,10 @@ def s_box_substitution(block):
     They are a lookup table that maps a 6-bit input to a 4-bit output.
 
     Parameters:
-        block: The output of the expansion function E.
+        block: the output of the expansion function E
 
     Returns:
-    - The ciphertext after being put through the nonlinear S-boxes.  
+    - The ciphertext after being put through the nonlinear S-boxes 
     """
     s_boxes = [
         [ # S-box S_1
@@ -243,10 +243,10 @@ def permutation_p(block):
     Does a bitwise permutation to introduce more diffusion.
 
     Parameters:
-    - block: The output block from the S-boxes.
+    - block: the output block from the S-boxes
 
     Returns:
-    - The ciphertext after being put through the permutation P function.
+    - The ciphertext after being put through the permutation P function
     """
     permutation_table = [16, 7, 20, 21, 29, 12, 28, 17,
                          1, 15, 23, 26, 5, 18, 31, 10,
@@ -272,11 +272,11 @@ def des_block_processing(blocks, keys):
     Does the permutations for each round of the DES feistel network.
 
     Parameters:
-    - block: The block to be proccesed on each round of encryption and decryption.
-    - keys: The key for the round.
+    - block: the block to be proccesed on each round of encryption and decryption
+    - keys: the key for the round
 
     Returns:
-    - The block of text that has been procccesed after each round.
+    - The block of text that has been procccesed after each round
     """
     proccesed_blocks = []
     for block in blocks:
@@ -293,11 +293,11 @@ def des_encrypt(plaintext, key):
     The entire run of the DES algorithm that will be used to encrypt the plaintext block.
 
     Parameters:
-    - plaintext: The plaintext to be encrypted in the DES algorithm.
-    - key: The key that will be used to generate the key schedule for the rounds.
+    - plaintext: the plaintext to be encrypted in the DES algorithm
+    - key: the key that will be used to generate the key schedule for the rounds
 
     Returns:
-    -  The ciphertext after going through the DES algorithm.
+    -  The ciphertext after going through the DES algorithm
     """
     keys = key_schedule(key)
     plaintext_blocks = [plaintext[i:i + 64] for i in range(0, len(plaintext), 64)]
@@ -312,11 +312,11 @@ def des_decrypt(ciphertext, key):
     The entire run of the DES algorithm that will be used to decrypt the ciphertext block.
 
     Parameters:
-    - ciphertext: The ciphertext to be decrypted in the DES algorithm.
-    - key:  The key that will be used to generate the reversed key schedule for the rounds.
+    - ciphertext: the ciphertext to be decrypted in the DES algorithm
+    - key:  the key that will be used to generate the reversed key schedule for the rounds
 
     Returns:
-    - The decrypted text after going through the DES algorithm.
+    - The decrypted text after going through the DES algorithm
     """
     keys = reversed_key_schedule(key)
     ciphertext_blocks = [ciphertext[i:i + 64] for i in range(0, len(ciphertext), 64)]

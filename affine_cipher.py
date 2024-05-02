@@ -3,11 +3,11 @@ def gcd(a, b):
     Computes the greatest common divisor (GCD) of the two numbers using the Euclidean algorithm. 
 
     Parameters:
-    - a: first number.
-    - b: second number.
+    - a: first number
+    - b: second number
 
     Returns:
-    - GCD of a and b.
+    - GCD of a and b
     """
     while b != 0:
         a, b = b, a % b # Update a and b using the Euclidean algorithm 
@@ -18,8 +18,8 @@ def mod_inverse(a, m):
     Computes the modular inverse of a number a mod m using the Extended Euclidean algorithm. 
 
     Parameters:
-    - a: the number for which the inverse is going to be found.
-    - m: the modulus.
+    - a: the number for which the inverse is going to be found
+    - m: the modulus
 
     Returns:
     - The modular inverse of a mod m if it exists, otherwise it returns None
@@ -34,12 +34,12 @@ def encrypt(plaintext, a, b):
     Encrypts a given plaintext using Affine Cipher.
 
     Parameters:
-    - plaintext: the input message to be encrypted.
-    - a: The multiplier in the encryption formula.
-    - b: The constant term in the encryption formula.
+    - plaintext: the input message to be encrypted
+    - a: the multiplier in the encryption formula
+    - b: the constant term in the encryption formula
 
     Returns:
-    - The encrypted message.
+    - The encrypted message
     """
     result = "" # Initialize an empty string
     m = 26 # Size of the English alphabet 
@@ -60,12 +60,12 @@ def decrypt(ciphertext, a, b):
     Decrypts a given ciphertext using Affine Cipher.
 
     Parameters:
-    - ciphertext: the encrypted message to be decrypted.
-    - a: The multiplier in the decryption formula.
-    - b: The constant term in the decryption formula.
+    - ciphertext: the encrypted message to be decrypted
+    - a: the multiplier in the decryption formula
+    - b: the constant term in the decryption formula
 
     Returns:
-    - The decrypted plaintext message.
+    - The decrypted plaintext message
     """
     # Initialize an empty string
     result = ""

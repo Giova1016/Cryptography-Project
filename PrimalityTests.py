@@ -6,11 +6,11 @@ def fermat_primality_test(p, k=10):
     Tests if a number is prime using the Fermat primality test.
 
     Parameters:
-    - n: the number being tested.
-    - k: the limit of times the number will be tested. Default will be 10.
+    - p: the number being tested
+    - k: the limit of times the number will be tested (default: 10)
 
     Returns:
-    - Returns if the number generated is a prime (True) or if it is not a prime (False) after being tested.
+    - Returns if the number generated is a prime (True) or if it is not a prime (False) after being tested
     """
     if p < 2: 
         return False
@@ -28,11 +28,11 @@ def miller_rabin_primality_test(prime_number, k=10):
     Tests if a number is prime using the Miller-Rabin primality test.
 
     Parameters:
-    - n: the number being tested.
-    - k: the limit of times the number will be tested. Default will be 10.
+    - prime_number: the number being tested
+    - k: the limit of times the number will be tested (default: 10)
 
     Returns:
-    - Returns if the number generated is a prime (True) or if it is not a prime (False) after being tested.
+    - Returns True if the number is a prime, False otherwise
     """
     if prime_number < 2: 
         return False

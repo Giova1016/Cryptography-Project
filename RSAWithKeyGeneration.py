@@ -32,11 +32,11 @@ def mod_inverse(a, m):
     Computes the modular inverse of a number a mod m using the Extended Euclidean algorithm. 
 
     Parameters:
-    - a: the number for which the inverse is going to be found.
-    - m: the modulus.
+    - a: the number for which the inverse is going to be found
+    - m: the modulus
 
     Returns:
-    - The modular inverse of a mod m if it exists, otherwise it returns an error.
+    - The modular inverse of a mod m if it exists, otherwise it returns an error
     """
     gcd, x, _ = extended_gcd(a, m)
     if gcd != 1:
@@ -49,10 +49,10 @@ def generate_key_pair(key_size):
     Generates an RSA key pair with the specified key size.
 
     Parameters:
-    - key_size: the desired size of the key (1024, 2048, etc...). 
+    - key_size: the desired size of the key (1024, 2048, etc...)
 
     Returns:
-    - The public and private key pair generated.
+    - The public and private key pair generated
     """
     # Choose two distinct prime numbers p and q
     p = generate_prime(key_size // 2)
@@ -79,10 +79,10 @@ def generate_prime(bit_length):
     Generates a random prime number with the specified bit length.
 
     Parameters:
-    - bit_length: the length of the exponent for the prime numbers to be generated.
+    - bit_length: the length of the exponent for the prime numbers to be generated
 
     Returns:
-    - The number of the specified length generated after being checked if it is a prime using the Miller-Rabin Primality test.
+    - The number of the specified length generated after being checked if it is a prime using the Miller-Rabin Primality test
     """
     while True:
         p = random.randrange(2 ** (bit_length - 1), 2 ** bit_length)
@@ -94,11 +94,11 @@ def rsa_encrypt(plaintext, public_key):
     Encrypts the plaintext message with the public key generated using the RSA Cyptosystem.
 
     Parameters:
-    - plaintext: the plaintext to be encrypted using the RSA Cryptosystem.
-    - public_key: the public key used to encrypt the message.
+    - plaintext: the plaintext to be encrypted using the RSA Cryptosystem
+    - public_key: the public key used to encrypt the message
 
     Returns:
-    - The encrypted ciphertext.
+    - The encrypted ciphertext
     """
     n, e = public_key
     ciphertext = square_and_multiply(plaintext, e, n)
@@ -109,11 +109,11 @@ def rsa_decrypt(ciphertext, private_key):
     Decrypts the ciphertext message with the private key generated using the RSA Cyptosystem.
 
     Parameters:
-    - ciphertext: the ciphertext to be decrypted using the RSA Cryptosystem.
-    - private_key: the private key used to decrypt the ciphertext.
+    - ciphertext: the ciphertext to be decrypted using the RSA Cryptosystem
+    - private_key: the private key used to decrypt the ciphertext
 
     Returns:
-    - The decrypted message.
+    - The decrypted message
     """
     n, d = private_key
     plaintext = square_and_multiply(ciphertext, d, n)
