@@ -118,7 +118,7 @@ def main():
     k_pub = square_and_multiply(alpha, k_priv, p)
     
     # Sender's encrypted message sent to the receiver   
-    message = 26 # Plaintext message
+    message = 723 # Plaintext message
     k = random.randint(2, p - 2)
     print(f"k = {k}")
     delta, Beta = elgamal_encrypt(message, p, alpha, k_pub, k)
