@@ -366,7 +366,7 @@ def main():
     # for i in range(4):
     #     print(' '.join(format(ciphertext[i * 4 + j], '02x') for j in range(4)))
 
-    print("\nEncrypted message converted to binary:")
+    print("Encrypted message converted to binary:")
     for i in range(4):
         print(' '.join(format(ciphertext[i * 4 + j], '08b') for j in range(4)))
     
@@ -378,7 +378,7 @@ def main():
     # for i in range(4):
     #     print(' '.join(format(decrypted_ciphertext[i * 4 + j], '02x') for j in range(4)))
         
-    print("\nDecrypted message converted to binary:")
+    print("Decrypted message converted to binary:")
     for i in range(4):
         print(' '.join(format(decrypted_ciphertext[i * 4 + j], '08b') for j in range(4)))    
 

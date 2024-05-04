@@ -34,10 +34,10 @@ def main():
     cycles2 = 15 # Number of cycles
 
     generated_key = lfsr(initial_state, polynomial_degree, cycles)
-    print(f"\nGenerated key after {cycles} cycles:", generated_key)
+    print(f"Generated key after {cycles} cycles:", generated_key)
 
     generated_key2 = lfsr(initial_state2, polynomial_degree2, cycles2)
-    print(f"\nGenerated key after {cycles2} cycles:", generated_key2)
+    print(f"Generated key after {cycles2} cycles:", generated_key2)
     
 if __name__ == "__main__":
     main()

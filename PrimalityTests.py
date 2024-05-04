@@ -74,7 +74,7 @@ def main():
             print(f"{p} should be composite, but the tests failed")
 
     for p in carmichael_numbers:
-        if not miller_rabin_primality_test(p) and fermat_primality_test(p):
+        if not miller_rabin_primality_test(p) or fermat_primality_test(p):
             print(f"{p} is a Carmichael number, Fermat test fails")
         else:
             print(f"{p} should be a Carmichael number, but the tests failed")
