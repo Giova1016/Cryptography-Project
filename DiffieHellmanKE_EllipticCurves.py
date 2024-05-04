@@ -47,7 +47,7 @@ def is_point_on_curve(P, a, b, p):
 
 def double_and_add(G, k, a, b, p):
     """
-    Performs point doubling on an elliptic curve.
+    Performs point doubling and adding on an elliptic curve.
 
     Parameters:
     - G: the point (x, y) on the elliptic curve
@@ -56,7 +56,7 @@ def double_and_add(G, k, a, b, p):
     - p: the prime modulus
 
     Returns:
-    - The result of the point doubling (x, y)
+    - The result of the point doubling and adding(x, y)
     """
     target_point = G
     
