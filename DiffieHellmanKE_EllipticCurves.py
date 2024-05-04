@@ -1,5 +1,5 @@
 import random 
-   
+
 def point_addition(P, Q, a, b, p):
     """
     Perform point addition on an elliptic curve. 
@@ -114,7 +114,7 @@ def ecdh(G, a, b, p):
     return T_AB
 
 def main():
-        # Choose a prime p and the elliptic curve parameters a, b
+    # Choose a prime p and the elliptic curve parameters a, b
     p = pow(2, 256) - pow(2, 32) - pow(2, 9) - pow(2, 8) - pow(2, 7) - pow(2, 6) - pow(2, 4) - pow(2, 0)
     a = 0
     b = 7
