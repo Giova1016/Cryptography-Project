@@ -58,10 +58,7 @@ git clone https://github.com/Giova1016/CocktailBuddyAppDownload.git
 pip install -r requirements.txt
 ```
 - Lastly, you can run the .py file containing the code for one of the cryptographic algorithms mentioned in the [About](#about) section.
-- Here is an example of how to run it.
+- Here is an example of running a program, in this case, the LFSR algorithm.
 ```python
-python<version> <program_name>.py
-
-// Example
 python LFSR.py
 ```
