@@ -1,6 +1,6 @@
 # Cryptography Algorithms
 
-This project is a working prototype for many Cryptography algorithms made in Python.
+This project includes the implementation of a few cryptographic algorithms made in Python.
 
 ## Introduction
 
