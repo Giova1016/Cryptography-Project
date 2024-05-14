@@ -5,13 +5,12 @@ This project is a working prototype for many Cryptography algorithms made in Pyt
 ## Table of Contents
 - [Introduction](#introduction)
 - [About](#about)
-- [How to Download](#howtodownload)
-- [Contributing](#contributing)
+- [How to Download](#how_to_download)
 
 ## Introduction
 
 This is a project made for an Introduction to Cryptography course.
-The project's purpose was for the students to program the cryptographic algorithms discussed during the course to solidify and apply what we learned.
+The project aimed for students to program the cryptographic algorithms discussed during the course to solidify and apply what we learned.
 
 ## About
 
@@ -67,4 +66,7 @@ pip install -r requirements.txt
 - Here is an example of how to run it.
 ```python
 python<version> <program_name>.py
+
+// Example
+python LFSR.py
 ```
