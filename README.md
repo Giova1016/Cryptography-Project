@@ -2,11 +2,6 @@
 
 This project is a working prototype for many Cryptography algorithms made in Python.
 
-## Table of Contents
-- [Introduction](#introduction)
-- [About](#about)
-- [How to Download](#how_to_download)
-
 ## Introduction
 
 This is a project made for an Introduction to Cryptography course.
